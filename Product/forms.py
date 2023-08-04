@@ -15,7 +15,7 @@ class ProductsCreate(forms.Form):
     
 
 class ReviewCreateForm(forms.Form):
-    title = forms.CharField(max_length=128)
+    user_name = forms.CharField(max_length=128)
     e_mail = forms.CharField(max_length=128)
     description = forms.CharField(widget=forms.Textarea)
     rate = forms.FloatField()
