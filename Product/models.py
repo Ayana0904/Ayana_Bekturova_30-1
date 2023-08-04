@@ -19,7 +19,7 @@ class Product(models.Model):
 
 
 class Review(models.Model):
-    title = models.CharField(max_length=128)
+    user_name = models.CharField(max_length=128)
     e_mail = models.CharField(max_length=128)
     description = models.TextField()
     rate = models.FloatField()
