@@ -1,0 +1,31 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+    <style type="text/css">
+        .post {
+          width: 80%;
+            margin-left: 10%;
+            padding: 10px;
+        }
+        .image > img {
+            width: 80%;
+        }
+        .dates {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    <div class="post">
+        <div class="image">
+           <img src="/media/{{ post.image }}/" alt="">
+        </div>
+        <div class="info">
+            <h1>{{ post.title }} Rate: {{ post.rate }}</h1>
+            <h4>{{ post.description }}</h4>
+            <div class="dates">
+                <h4>{{ post.created_date }}</h4>
+                <h4>{{ post.modified_date }}</h4>
+            </div>
+        </div>
+    </div>
+{% endblock %}
