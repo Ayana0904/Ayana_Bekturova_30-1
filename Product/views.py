@@ -1,6 +1,6 @@
 from itertools import product
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from Product.models import Product, Category, Review
 from products.forms import ProductCreateForm, CategoryCreateForm, ReviewCreateForm
 
