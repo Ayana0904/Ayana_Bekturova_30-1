@@ -17,3 +17,8 @@ class Product(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+
+class Comment(models.Model):
+    text = models.CharField(max_length=355)
+    product = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    create_date = models.DateField(auto_now_add=True)
