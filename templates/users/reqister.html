@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Register Page</h1>
-    <form action="/users/reqister/" method="post">
+    <form action="/users/reqister/" method="product">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Register">
