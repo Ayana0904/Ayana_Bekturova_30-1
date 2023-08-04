@@ -1,6 +1,9 @@
-from itertools import product
+from django.db.models import Q
+
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect
+
 from Product.models import Product, Category, Review
 from products.forms import ProductCreateForm, CategoryCreateForm, ReviewCreateForm
 
@@ -15,29 +18,26 @@ def main_view(request):
 def products_view(request):
     if request.method == 'GET':
         products = Product.objects.all()
-        posts = Post.objects.all().order_by('-create_date')
-        search = request.GET.get('search')
-        page = int(request.GET.get('page', 1))
-
-        if search:
-            products = products.filter(title__contains=search) | products.filter(description__contains=search)
-
-        max_page = posts.__len__() / PAGINATION_LIMIT
+         max_page = products.__len__() / PAGINATION_LIMIT
         if round(max_page) < max_page:
             max_page = round(max_page) + 1
         else:
             max_page = round(max_page)
 
-        products = products [PAGINATION_LIMIT * (page-1):PAGINATION_LIMIT * page]
+        search_text = request.GET.get('search')
+        page = int(request.GET.get('page', 1))
 
+        if search_text:
+            products = products.filter(Q(title__icontains=search_text) |
+                                       Q(description__icontains=search_text))
+
+        products = products[PAGINATION_LIMIT * (page - 1):PAGINATION_LIMIT * page]
 
         context_data = {
-            'products': products
+            'products': products,
             'user': request.user,
             'pages': range(1, max_page+1)
-            
         }
-
         return render(request, 'products/products.html', context=context_data)
 
 
@@ -80,8 +80,7 @@ def product_create_view(request):
                 image=form.cleaned_data.get('image'),
                 title=form.cleaned_data.get('title'),
                 description=form.cleaned_data.get('description'),
-                price=form.cleaned_data.get('price'),
-                rate=form.cleaned_data.get('rate'),
+                price=form.cleaned_data.get('price')
             )
             return redirect('/products/')
 
@@ -128,9 +127,7 @@ def review_create_view(request, id):
             Review.objects.create(
                 user_name=form.cleaned_data.get('user_name'),
                 e_mail=form.cleaned_data.get('e_mail'),
-                description=form.cleaned_data.get('description'),
-                rate=form.cleaned_data.get('rate'),
-                product=product,
+                description=form.cleaned_data.get('description')
 
             )
             return redirect('products/detail.html'.format(id))
