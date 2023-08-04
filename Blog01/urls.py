@@ -19,24 +19,22 @@ from django.urls import path
 from django.conf.urls.static import static
 
 from Blog01 import settings
-
-from posts import views
-# from posts.views import main_view, posts_view, hashtags_view, post_detail_view, post_create_view
-from Product.views import products_view, categories_view
+from Product import views
+from users import views as users_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main_view),
 
-    path('posts/', views.posts_view),
+    path('products/', view.products_view),
+    path('products/create/', views.product_create_view),
     path('posts/<int:id>/', views.post_detail_view),
 
-    path('hashtags/', views.hashtags_view),
-    path('posts/create/', views.post_create_view),
+    path('categories/', view.categories_view),
 
-
-    path('products/', products_view),
-    path('categories/', categories_view),
+    path('users/reqister/', users_view.register_view),
+    path('users/login/', users_view.login_view),
+    path('users/logout/', users_view.logout_view),
 ]
 
 
