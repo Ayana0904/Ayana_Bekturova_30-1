@@ -52,76 +52,89 @@ def categories_view(request):
         return render(request, 'categories/categories.html', context=context_data)
 
 
-def products_detail_view(request, id):
-    if request.method == 'GET':
-        product = Products.objects.get(id=id)
+def product_detail_view(request, id):
+    if request.method == "GET":
+        product = Product.objects.get(id=id)
 
-        context = {
-            'product': product,
-            'comments': product.comment_set.all(),
-            'form': CommentsCreateForm
+        context_data = {
+            'product': product
         }
 
-        return render(request, 'products/detail.html', context=context)
+        return render(request, 'products/detail.html', context=context_data)
 
-    if request.method == 'POST':
-        product = Products.objects.get(id=id)
-        data = request.POST
-        form = CommentsCreateForm(data=data)
 
-        if form.is_valid():
-            Comment.objects.create(
-                text=form.cleaned_data.get('text'),
-                title=form.cleaned_data.get('name'),
-                product=product
-
-            )
-
-        context = {
-            'product': product,
-            'comments': product.comment_set.all(),
-            'form': form
-        }
-
-        return render(request, 'products/detail.html', context=context)
-
-def create_product_view(request):
+@login_required
+def product_create_view(request):
     if request.method == 'GET':
-        context_data = {'form': Products}
-        return render(request, 'products/', context=context_data)
+        context_data = {
+            'form': ProductCreateForm
+        }
+        return render(request, 'products/create.html', context=context_data)
 
     if request.method == 'POST':
         data, files = request.POST, request.FILES
-        form = Products_create(data, files)
+        form = ProductCreateForm(data, files)
+
         if form.is_valid():
-            Products.objects.create(
+            Product.objects.create(
                 image=form.cleaned_data.get('image'),
                 title=form.cleaned_data.get('title'),
                 description=form.cleaned_data.get('description'),
+                price=form.cleaned_data.get('price'),
                 rate=form.cleaned_data.get('rate'),
-                category=form.cleaned_data.get('category'),
-                prize=form.cleaned_data.get('prize'),
-
-
             )
             return redirect('/products/')
-        return render(request, 'products/categories.html', context={'form': form})
+
+        return render(request, 'products/create.html', context={
+            'form': form
+        })
 
 
-def create_category_view(request):
+def category_create_view(request):
     if request.method == 'GET':
-        context_data = {'form': Category_create}
-
+        context_data = {
+            'form': CategoryCreateForm
+        }
         return render(request, 'products/categories.html', context=context_data)
 
     if request.method == 'POST':
         data, files = request.POST, request.FILES
-        form = Category_create(data, files)
+        form = CategoryCreateForm(data, files)
 
-        if f.is_valid():
+        if form.is_valid():
             Category.objects.create(
-                title=form.cleaned_data.get('title')
+                title=form.cleaned_data.get('title'),
+            )
+            return redirect('/categories/')
+
+        return render(request, 'products/categories.html', context={
+            'form': form
+        })
+
+
+def review_create_view(request, id):
+    if request.method == 'GET':
+        context_data = {
+            'form': ReviewCreateForm
+        }
+        return render(request, 'products/reviews.html', context=context_data)
+
+    if request.method == 'POST':
+        data, files = request.POST, request.FILES
+        form = ReviewCreateForm(data, files)
+
+        if form.is_valid():
+            product = Product.objects.get(id=id)
+            Review.objects.create(
+                user_name=form.cleaned_data.get('user_name'),
+                e_mail=form.cleaned_data.get('e_mail'),
+                description=form.cleaned_data.get('description'),
+                rate=form.cleaned_data.get('rate'),
+                product=product,
 
             )
-            return redirect('/category/')
-        return render(request, 'products/categories.html', context={'form': form})
+            return redirect('products/detail.html'.format(id))
+
+        return render(request, 'products/reviews.html', context={
+            'form': form
+        })
