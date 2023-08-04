@@ -30,6 +30,8 @@ def products_view(request):
 
         context_data = {
             'products': products
+            'user': request.user,
+            'pages': range(1, max_page+1)
             
         }
 
