@@ -1,7 +1,7 @@
 from itertools import product
 
 from django.shortcuts import render
-from Product.models import Product, Category
+from Product.models import Product, Category, Review
 
 
 def main_view(request):
